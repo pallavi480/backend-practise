@@ -1,0 +1,12 @@
+tow models : user and product 
+user roles: user and admin
+
+user login required to view product
+
+admin  - Crud on user
+
+          Crud on product
+
+          Role - based route protection
+
+          
