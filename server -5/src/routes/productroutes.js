@@ -9,3 +9,4 @@ productrouter.get("/getdata",verify,getProduct)
 productrouter.post("/postdata",verify,checkrole ("admin"),postProduct)
 productrouter.post("/register", verify, checkrole("admin"), postProduct);
 export default productrouter;
+// green commit test

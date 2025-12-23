@@ -10,3 +10,4 @@ userrouter.post("/login",login)
 userrouter.post("/getall", verify, checkrole("admin"), getAllUser)
 
 export default userrouter;
+// green commit test

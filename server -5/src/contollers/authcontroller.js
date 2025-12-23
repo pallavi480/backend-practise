@@ -41,3 +41,4 @@ const getAllUser = async(req,res)=>{
 }
 
   export  {register, login, getAllUser};
+  // green commit test
