@@ -24,9 +24,20 @@ const login = async(req,res)=>{
         const IsMatch = await bcrypt.compare(password,user.password);
         if(!IsMatch)return res.status(401).json({message:"wrong password"})
 
-     const token = jwt.sign({id:user._id}, process.env.secretkey)
+     const token = jwt.sign({id:user._id, role:user.role}, process.env.SECRET_KEY,{expiresIn:"2h"})
      
      res.json({message:"login",token})
 }
 
-export  {register, login};
+const getAllUser = async(req,res)=>{
+    try{
+
+    let AllUser = await userModel.find()
+
+    res.status(200).send(AllUser)
+}catch (error){
+    res.send(error)
+}
+}
+
+  export  {register, login, getAllUser};
