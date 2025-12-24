@@ -1,5 +1,5 @@
 import productModel from "../models/productmodel.js";
-
+import sendMail from "../utities/mailer.js"
 const getProduct = async (req, res) => {
   try {
 
@@ -25,6 +25,14 @@ const getProduct = async (req, res) => {
 const postProduct = async (req, res) => {
   try {
     const product = await productModel.create(req.body);
+    await sendMail({
+    to:"pallavigayaki@gmail.com",
+    subject:"new mail send",
+    html:`<h2>check out new mail send</h2>
+           <p><br>Name:</b> ${product.title}</p>
+           <p><br>price:</b> ${product.price}</p>`
+  });
+
     res.status(201).json({
       message: "product added",
       product
@@ -34,7 +42,50 @@ const postProduct = async (req, res) => {
   }
 };
 
-export { getProduct, postProduct };
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await productModel.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ message: "product not found" });
+    }
+
+    res.status(200).json({
+      message: "product updated",
+      product
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await productModel.findByIdAndDelete(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "product not found" });
+    }
+
+    res.status(200).json({
+      message: "product deleted"
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+
+
+export { getProduct, postProduct,updateProduct,deleteProduct };
 
 // green commit test
 

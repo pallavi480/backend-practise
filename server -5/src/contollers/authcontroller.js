@@ -1,44 +1,83 @@
 import userModel from "../models/usermodel.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-const register = async(req,res)=>{
-    const {name,email,password,role} = req.body;
-    const hashpass = await bcrypt.hash(password,10)
+const register = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    const existUser = await userModel.findOne({ email });
+    if (existUser) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    const hashpass = await bcrypt.hash(password, 10);
 
     const user = await userModel.create({
-        name,
-        email,
-        password: hashpass,
-        role
+      name,
+      email,
+      password: hashpass,
+      role: role || "user"
     });
-    res.status(201).json({Message:"user created",user})
 
-}
+    res.status(201).json({
+      message: "User created",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
 
-const login = async(req,res)=>{
-    const {email, password}= req.body
-    const user = await userModel.findOne({email})
-    if(!user) return res.status(404).json({message:"user not found"})
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 
-        const IsMatch = await bcrypt.compare(password,user.password);
-        if(!IsMatch)return res.status(401).json({message:"wrong password"})
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-     const token = jwt.sign({id:user._id, role:user.role}, process.env.SECRET_KEY,{expiresIn:"2h"})
-     
-     res.json({message:"login",token})
-}
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-const getAllUser = async(req,res)=>{
-    try{
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Wrong password" });
+    }
 
-    let AllUser = await userModel.find()
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.SECRET_KEY,
+      { expiresIn: "4h" }
+    );
 
-    res.status(200).send(AllUser)
-}catch (error){
-    res.send(error)
-}
-}
+    res.status(200).json({
+      message: "Login successful",
+      token
+    });
 
-  export  {register, login, getAllUser};
-  // green commit test
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+
+const getAllUser = async (req, res) => {
+  try {
+    const allUsers = await userModel.find().select("-password");
+
+    res.status(200).json(allUsers);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export { register, login, getAllUser };
