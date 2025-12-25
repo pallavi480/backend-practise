@@ -4,12 +4,18 @@ import connectDB from "./config/db.js";
 import productrouter from "./routes/productroutes.js";
 import userrouter from "./routes/userroutes.js";
 import Contact from "./routes/contactroute.js"
+import path from "path";
 dotenv.config();
 
 connectDB()  
 
 const app = express()
 app.use(express.json())
+
+// app.use("/uploads", express.static(path.join(process.cwd(), "src", "uploads")));
+
+app.use("/products", express.static(path.join(process.cwd(), "src", "products")));
+
 
 app.get("/", (req, res) => {
   res.send("Server is running ")

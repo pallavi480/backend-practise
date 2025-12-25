@@ -21,18 +21,22 @@ const register = async (req, res) => {
       name,
       email,
       password: hashpass,
-      role: role || "user"
+      role: role || "user",
+      profile:req.file ?`uploads/${req.file.filename}` : ""
+      
     });
 
     res.status(201).json({
-      message: "User created",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
-    });
+  message: "User created",
+  user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    profile: user.profile  
+  }
+});
+
 
   } catch (error) {
     res.status(500).json(error);

@@ -2,16 +2,26 @@ import express from "express";
 import {getProduct,postProduct,updateProduct,deleteProduct} from "../contollers/productcontoller.js";
 import verify from "../middleware/authmiddle.js";
 import checkRole from "../middleware/role.middleware.js";
+import upload from "../middleware/uploadmiddleware.js";
+import products from "../middleware/productsmiddleware.js"
 
 const productrouter = express.Router();
 
-productrouter.get("/getdata", verify, getProduct);
+// productrouter.get("/getdata", verify, getProduct);
 
-productrouter.post("/postdata", verify, checkRole("admin"), postProduct);
+productrouter.get("/getdata",  getProduct);
 
-productrouter.put("/update/:id", verify, checkRole("admin"), updateProduct);
+// productrouter.post("/postdata", upload.array("images", 5), postProduct);
 
-productrouter.delete("/delete/:id", verify, checkRole("admin"), deleteProduct);
+productrouter.post("/postdata", products.array("images", 5), postProduct);
+
+
+
+// productrouter.post("/postdata", verify, checkRole("admin"), postProduct);
+
+// productrouter.put("/update/:id", verify, checkRole("admin"), updateProduct);
+
+// productrouter.delete("/delete/:id", verify, checkRole("admin"), deleteProduct);
 
 export default productrouter;
 

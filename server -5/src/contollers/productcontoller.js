@@ -22,25 +22,48 @@ const getProduct = async (req, res) => {
   }
 };
 
+
 const postProduct = async (req, res) => {
   try {
-    const product = await productModel.create(req.body);
-    await sendMail({
-    to:"pallavigayaki@gmail.com",
-    subject:"new mail send",
-    html:`<h2>check out new mail send</h2>
-           <p><br>Name:</b> ${product.title}</p>
-           <p><br>price:</b> ${product.price}</p>`
-  });
+    const { title, price } = req.body;
+
+    // ✅ Validation
+    if (!title || !price) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    // ✅ Multiple images handle
+    const images = req.files
+      ? req.files.map(file => `products/${file.filename}`)
+      : [];
+
+    const product = await productModel.create({
+      title,
+      price,
+      images   
+    });
 
     res.status(201).json({
-      message: "product added",
+      message: "Product added",
       product
     });
+
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 };
+
+
+  
+    //   await sendMail({
+  //   to:"pallavigayaki@gmail.com",
+  //   subject:"new mail send",
+  //   html:`<h2>check out new mail send</h2>
+  //          <p><br>Name:</b> ${product.title}</p>
+  //          <p><br>price:</b> ${product.price}</p>`
+  // });
+
+
 
 const updateProduct = async (req, res) => {
   try {
