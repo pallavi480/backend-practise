@@ -27,12 +27,12 @@ const postProduct = async (req, res) => {
   try {
     const { title, price } = req.body;
 
-    // ✅ Validation
+    // Validation
     if (!title || !price) {
       return res.status(400).json({ message: "All fields required" });
     }
 
-    // ✅ Multiple images handle
+    //  Multiple images handle
     const images = req.files
       ? req.files.map(file => `products/${file.filename}`)
       : [];

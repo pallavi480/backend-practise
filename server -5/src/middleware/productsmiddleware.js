@@ -1,33 +1,16 @@
-import { Error } from "mongoose";
+// import mongoose from "mongoose";
 import multer from "multer";
 import path from "path";
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) =>{
-        cb(null, path.join(process.cwd(),"src","produts"))
-    },
-    filename: (req, file, cb) =>{
-        cb(null, Date.now() + path.extname(file.originalname))
-    }
-})
-
-// file type validation
-
-const fileFilter = (req,file,cb)=>{
-  if(
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/png"  ||
-    file.mimetype === "image/jpg"    
-  ){
-  cb(null, true)
-  }else{
-    cb(new Error("only images allowed"), false)
+  destination: (req, file, cb) => {
+    cb(null, path.join(process.cwd(), "src", "products"));
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
   }
-}
+});
 
-const upload = multer({
-    storage,
-    fileFilter
-})
+const products = multer({ storage });
 
-export default upload;
+export default products;
