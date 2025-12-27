@@ -34,7 +34,9 @@ const postProduct = async (req, res) => {
 
     //  Multiple images handle
     const images = req.files
-      ? req.files.map(file => `products/${file.filename}`)
+      // ? req.files.map(file => `products/${file.filename}`)
+      // : [];
+      ? req.files.map(file => `gallary/${file.filename}`)
       : [];
 
     const product = await productModel.create({

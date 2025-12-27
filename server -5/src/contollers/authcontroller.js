@@ -22,7 +22,9 @@ const register = async (req, res) => {
       email,
       password: hashpass,
       role: role || "user",
-      profile:req.file ?`uploads/${req.file.filename}` : ""
+      // profile:req.file ?`uploads/${req.file.filename}` : ""
+      profile:req.file ?`gallary/${req.file.filename}` : ""
+      
       
     });
 

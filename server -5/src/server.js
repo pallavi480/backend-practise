@@ -14,7 +14,7 @@ app.use(express.json())
 
 // app.use("/uploads", express.static(path.join(process.cwd(), "src", "uploads")));
 
-app.use("/products", express.static(path.join(process.cwd(), "src", "products")));
+app.use("/products", express.static(path.join(process.cwd(), "src", "gallary")));
 
 
 app.get("/", (req, res) => {
